@@ -365,9 +365,9 @@ def metrics_to_dict(metrics):
     metrics_dict = None
     if metrics:
         metrics_dict = {
+            "Total Return (%)": round(metrics['total_return'] * 100, 4),
             "Number of Trades": metrics['number_of_trades'],
             "Win Rate (%)": round(metrics['win_rate'] * 100, 4),
-            "Total Return (%)": round(metrics['total_return'] * 100, 4),
             "Average Upside/Winning Trade (%)": round(metrics['average_upside'] * 100, 4),
             "Average Downside/Losing Trade (%)": round(metrics['average_downside'] * 100, 4),
             "Expected P/L Per Trade (%)": round(metrics['expected_pl_per_trade'] * 100, 4),
