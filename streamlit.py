@@ -108,6 +108,7 @@ def main():
                             data = filter_data_by_date(data, params_forward['start_date'], params_forward['end_date'])
                             data = calculate_cumulative_returns(data)
                             trade_table, signal, metrics = evaluate_strategy(data)
+
                             metrics = metrics_to_dict(metrics)
                             buy_hold = buy_and_hold_metrics_to_dict(data)
 
@@ -129,6 +130,8 @@ def main():
                                     pass
 
                             table = pd.concat([table, signal], ignore_index=True)
+                            metrics_list = ["Max Drawdown (%)", "Max Run-up (%)"]
+                            table = adjust_metrics_before_first_buy(table, metrics_list)
                             complete_trade = pd.concat([complete_trade, trade_table], ignore_index=True)
                             if len(complete_trade) > 0:
                                 complete_trade = complete_trade.groupby('Entry_Time', as_index=False).first()

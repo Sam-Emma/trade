@@ -248,6 +248,27 @@ def adjust_signals_before_first_buy(data):
 
     return data
 
+
+def adjust_metrics_before_first_buy(data, metrics):
+    """
+    Replace all signals with 'Hold' until the first 'Buy' signal occurs.
+    """
+    # Set a flag to indicate when the first 'Buy' has been found
+    first_buy_found = False
+    data = data.reset_index(drop=True)
+    # Iterate through the DataFrame and update the Signal column
+    for i in range(len(data)):
+        if not first_buy_found:
+            if data.loc[i, 'Signal'] == 'Sell':
+                first_buy_found = True
+            else:
+                for j in metrics:
+                    data.loc[i, j] = 0.0
+        else:
+            break  # Stop processing after the first Buy has been encountered
+
+    return data
+
 def evaluate_strategy(data):
     """
     Evaluate the trading strategy using various metrics, including average trade duration.
@@ -256,6 +277,7 @@ def evaluate_strategy(data):
     data["Trades"] = data['Predicted_Signal'].diff().fillna(0)
     # Adjust the signals before the first Buy
     data = adjust_signals_before_first_buy(data)
+
     data['Signal'] = data["Trades"].copy()
     data['Signal'] = data['Signal'].replace({
         1.0: "Buy",
